@@ -5,7 +5,7 @@ import com.taller.coboljava.business.bo.payer.Payer;
 
 import java.math.BigDecimal;
 
-public abstract class Payment {
+public abstract class Payment implements ExecutableInTime {
     protected Payer payerData;
     protected BigDecimal amount;
 
@@ -21,7 +21,6 @@ public abstract class Payment {
     public BigDecimal getAmount() {
         return amount;
     }
-
 
 
 }
