@@ -8,12 +8,28 @@ import com.taller.coboljava.business.bo.factory_method.CreateCardPayment;
 import com.taller.coboljava.business.bo.factory_method.CreateCryptoPayment;
 import com.taller.coboljava.business.bo.factory_method.CreatePayment;
 import com.taller.coboljava.business.bo.factory_method.CreateTransferPayment;
+import com.taller.coboljava.business.bo.payment.CardPayment;
+import com.taller.coboljava.business.bo.payment.CryptoPayment;
 import com.taller.coboljava.business.bo.payment.Payment;
+import com.taller.coboljava.business.bo.payment.TransferPayment;
 import com.taller.coboljava.business.bo.singleton.StdInSingleton;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class Application {
+
+    public Double ejecutarOperacionMatematica(Integer i, Integer j, String operacion) {
+        if (operacion == "SUMA") {
+            return (double) i + j;
+        } else if (operacion == "RESTA") {
+            return (double) i - j;
+        }
+        return null;
+    }
+
     private static Scanner in = StdInSingleton.getInstance();
 
     public static void main(String... args) throws InterruptedException {
@@ -25,19 +41,23 @@ public class Application {
             option = Integer.parseInt(s);
             Payment p = null;
 
-            PaymentAbstractFactory paymentAbstractFactory = DummyPaymentFactory.getInstance();
+            Class<? extends Payment> targetPayment = null;
 
             switch (option) {
                 case 1:
-                    p = paymentAbstractFactory.createTransferPayment();
+                    targetPayment = TransferPayment.class;
                     break;
                 case 2:
-                    p = paymentAbstractFactory.createCardPayment();
+                    targetPayment = CardPayment.class;
                     break;
                 case 3:
-                    p = paymentAbstractFactory.createCryptoPayment();
+                    targetPayment = CryptoPayment.class;
                     break;
             }
+
+            PaymentAbstractFactory paymentAbstractFactory = DummyPaymentFactory.getInstance(targetPayment);
+            p = paymentAbstractFactory.create();
+
             if (p != null) {
                 System.out.println(p);
                 Thread.sleep(p.executionTime());

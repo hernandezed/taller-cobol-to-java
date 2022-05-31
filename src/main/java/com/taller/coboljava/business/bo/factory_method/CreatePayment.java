@@ -4,7 +4,7 @@ import com.taller.coboljava.business.bo.payment.Payment;
 
 import java.util.Scanner;
 
-public interface CreatePayment {
+public interface CreatePayment<T extends Payment> {
 
-    Payment create(Scanner in);
+    T create(Scanner in);
 }

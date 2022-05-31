@@ -4,45 +4,37 @@ import com.taller.coboljava.business.bo.factory_method.CreateCardPayment;
 import com.taller.coboljava.business.bo.factory_method.CreateCryptoPayment;
 import com.taller.coboljava.business.bo.factory_method.CreatePayment;
 import com.taller.coboljava.business.bo.factory_method.CreateTransferPayment;
+import com.taller.coboljava.business.bo.payment.CardPayment;
 import com.taller.coboljava.business.bo.payment.Payment;
+import com.taller.coboljava.business.bo.payment.TransferPayment;
 import com.taller.coboljava.business.bo.singleton.StdInSingleton;
 
 import java.util.Scanner;
 
-public class DummyPaymentFactory implements PaymentAbstractFactory {
 
-    private CreatePayment createCardPayment;
-    private CreatePayment createCryptoPayment;
-    private CreatePayment createTransferPayment;
+public class DummyPaymentFactory<T extends Payment, S extends CreatePayment<T>> implements PaymentAbstractFactory<T> {
+    private S createPaymentFactoryMethod;
     private Scanner in;
-    private static DummyPaymentFactory instance;
 
-    private DummyPaymentFactory() {
-        this.createCardPayment = new CreateCardPayment();
-        this.createCryptoPayment = new CreateCryptoPayment();
-        this.createTransferPayment = new CreateTransferPayment();
+    public DummyPaymentFactory(S createPaymentFactoryMethod) {
+        this.createPaymentFactoryMethod = createPaymentFactoryMethod;
         this.in = StdInSingleton.getInstance();
     }
 
     @Override
-    public Payment createCardPayment() {
-        return createCardPayment.create(in);
+    public T create() {
+        return createPaymentFactoryMethod.create(in);
     }
 
-    @Override
-    public Payment createCryptoPayment() {
-        return createCryptoPayment.create(in);
-    }
-
-    @Override
-    public Payment createTransferPayment() {
-        return createTransferPayment.create(in);
-    }
-
-    public static DummyPaymentFactory getInstance() {
-        if (instance == null) {
-            instance = new DummyPaymentFactory();
+    public static <T extends Payment, S extends CreatePayment<T>> DummyPaymentFactory<T, S> getInstance(Class<T> targetPayment) {
+        S factory = null;
+        if (targetPayment.equals(CardPayment.class)) {
+            factory = (S) new CreateCardPayment();
+        } else if (targetPayment.equals(TransferPayment.class)) {
+            factory = (S) new CreateTransferPayment();
+        } else {
+            factory = (S) new CreateCryptoPayment();
         }
-        return instance;
+        return new DummyPaymentFactory<>(factory);
     }
 }

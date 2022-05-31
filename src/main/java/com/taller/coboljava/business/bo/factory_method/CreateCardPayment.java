@@ -7,9 +7,9 @@ import com.taller.coboljava.business.bo.payment.Payment;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
-public class CreateCardPayment implements CreatePayment {
+public class CreateCardPayment implements CreatePayment<CardPayment> {
     @Override
-    public Payment create(Scanner in) {
+    public CardPayment create(Scanner in) {
         System.out.println("Ingrese su nombre");
         String name = in.nextLine();
         System.out.println("Ingrese el numero de su tarjeta");
@@ -18,8 +18,6 @@ public class CreateCardPayment implements CreatePayment {
         BigDecimal amount = new BigDecimal(in.nextLine());
 
         CardPayer payerData = new CardPayer(name, card);
-        Payment payment = new CardPayment(payerData, amount);
-
-        return payment;
+        return new CardPayment(payerData, amount);
     }
 }

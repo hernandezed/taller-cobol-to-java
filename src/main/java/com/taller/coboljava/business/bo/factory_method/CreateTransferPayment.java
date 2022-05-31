@@ -8,9 +8,9 @@ import com.taller.coboljava.business.bo.payment.TransferPayment;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
-public class CreateTransferPayment implements CreatePayment {
+public class CreateTransferPayment implements CreatePayment<TransferPayment> {
     @Override
-    public Payment create(Scanner in) {
+    public TransferPayment create(Scanner in) {
         System.out.println("Ingrese su nombre");
         String name = in.nextLine();
         System.out.println("Ingrese su cbu");
@@ -23,8 +23,6 @@ public class CreateTransferPayment implements CreatePayment {
         BigDecimal amount = new BigDecimal(in.nextLine());
         TransferPayer payerData = new TransferPayer(name, cbu);
         TransferBeneficiary beneficiaryData = new TransferBeneficiary(beneficiaryName, beneficiaryCbu);
-        Payment payment = new TransferPayment(payerData, amount, beneficiaryData);
-
-        return payment;
+        return new TransferPayment(payerData, amount, beneficiaryData);
     }
 }
